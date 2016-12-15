@@ -1,7 +1,7 @@
 ---
 title: "Course Project Practical Machine Learning"
 author: "TK"
-date: "15 décembre 2016"
+date: "15 dÃ©cembre 2016"
 output: html_document
 ---
 
@@ -184,7 +184,6 @@ We use Random Forests for our prediction:
 ```{r}
 predictions <- predict(modFit2, validation, type = "class")
 predictionsFinal <- data.frame(validation$problem_id, predictions)
-print(predictionsFinal)
 
 ```
 
