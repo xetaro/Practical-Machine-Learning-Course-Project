@@ -261,31 +261,9 @@ We use Random Forests for our prediction:
 
     predictions <- predict(modFit2, validation, type = "class")
     predictionsFinal <- data.frame(validation$problem_id, predictions)
-    print(predictionsFinal)
+    
 
-    ##    validation.problem_id predictions
-    ## 1                      1           B
-    ## 2                      2           A
-    ## 3                      3           B
-    ## 4                      4           A
-    ## 5                      5           A
-    ## 6                      6           E
-    ## 7                      7           D
-    ## 8                      8           B
-    ## 9                      9           A
-    ## 10                    10           A
-    ## 11                    11           B
-    ## 12                    12           C
-    ## 13                    13           B
-    ## 14                    14           A
-    ## 15                    15           E
-    ## 16                    16           E
-    ## 17                    17           A
-    ## 18                    18           B
-    ## 19                    19           B
-    ## 20                    20           B
-
-#### Function to generate files with predictions to submit for assignment
+    #### Function to generate files with predictions to submit for assignment
 
     pml_write_files = function(x){
       n = length(x)
