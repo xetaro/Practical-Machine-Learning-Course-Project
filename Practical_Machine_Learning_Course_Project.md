@@ -146,11 +146,11 @@ model tested using the method rpart.
 
 ![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit1.png)
 
-\`\`\`
+
 
     fancyRpartPlot(modFit1$finalModel,cex=.8,under.cex=0.4)
 
-![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit1_Final_model.png)
+![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit1_Final_Model.png)
 
     predict1 <- predict(modFit1,mytesting)
     RpartCM <-confusionMatrix(mytesting$classe, predict1)
