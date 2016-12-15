@@ -1,0 +1,201 @@
+---
+title: "Course Project Practical Machine Learning"
+author: "TK"
+date: "15 décembre 2016"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Introduction
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively.
+
+These type of devices are part of the quantified self movement - a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks.
+
+One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. 
+
+In this project, the goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways.
+
+More information is available from the website here: http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset). 
+
+
+## Data
+
+The training data for this project are available here:
+
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv
+
+The test data are available here:
+
+https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv
+
+The data for this project come from this source:
+
+http://groupware.les.inf.puc-rio.br/har. 
+
+### About Data
+
+#### Human Activity Recognition
+
+Human Activity Recognition - HAR - has emerged as a key research area in the last years and is gaining increasing attention by the pervasive computing research community, especially for the development of context-aware systems. There are many potential applications for HAR, like: elderly monitoring, life log systems for monitoring energy expenditure and for supporting weight-loss programs, and digital assistants for weight lifting exercises.
+
+
+#### Load packages
+
+```{r results='hide', message=FALSE, warning=FALSE}
+library(caret)
+library(rpart)
+library(rpart.plot)
+library(RColorBrewer)
+library(rattle)
+library(randomForest)
+library(AppliedPredictiveModeling)
+```
+
+
+
+### Download data
+
+```{r}
+download.file(url = "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv", destfile = "data_train.csv")
+
+download.file(url = "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv", destfile = "data_test.csv")
+
+```
+### Read data
+
+```{r}
+training <- read.csv("data_train.csv", na.strings=c("NA","#DIV/0!",""))
+validation <- read.csv("data_test.csv", na.strings=c("NA","#DIV/0!",""))
+dim(training); dim(validation)
+```
+
+``` {r}
+head(training$classe);class(training$classe); summary(training$classe)
+```
+
+## Cleaning Data
+
+```{r}
+### We Remove columns with Near Zero Values
+NZV <- nearZeroVar(training, saveMetrics = TRUE)
+myTraining <- training[, !NZV$nzv]
+
+```
+
+```{r}
+### Remove columns with NA or is empty
+
+myTraining <- myTraining[, names(myTraining)[sapply(myTraining, function (x)
+        ! (any(is.na(x) | x == "")))]]
+
+```
+
+```{r}
+### Removing  columns of the dataset that is unlikely to influence the prediction
+
+Useless <-grepl("^X|timestamp|user_name", names(myTraining))
+myTraining <- myTraining[, !Useless]
+rm(Useless)
+
+```
+### Separate the data to be used for Cross Validation
+
+Divide training set into 2 parts
+
+```{r}
+set.seed(1234)
+inTrain <- createDataPartition(y=myTraining$classe, p=0.6, list=FALSE)
+mytraining <- myTraining[inTrain, ]; mytesting <- myTraining[-inTrain, ]
+dim(mytraining); dim(mytesting)
+
+```
+
+We can test 2 models: Decision Tree Model and Random forest
+
+#### 1. Decision Tree Model
+
+As the outcomes are categorical (nominal), a decision tree was the first model tested using the method rpart.
+
+```{r}
+set.seed(1234)
+modFit1<-train(classe ~ .,method="rpart", data=mytraining)
+print(modFit1$finalModel)
+
+plot(modFit1$finalModel, main = "Classification tree")
+text(modFit1$finalModel, use.n = TRUE, all = TRUE, cex = .5)
+
+```
+
+```{r}
+
+fancyRpartPlot(modFit1$finalModel,cex=.8,under.cex=0.4)
+
+```
+
+```{r}
+predict1 <- predict(modFit1,mytesting)
+RpartCM <-confusionMatrix(mytesting$classe, predict1)
+RpartCM
+```
+
+#### 2. Random forest
+
+```{r}
+set.seed(1234)
+modFit2 <- randomForest(classe ~ ., data=mytraining)
+predict2 <- predict(modFit2, mytesting,  type = "class")
+RFCM <-confusionMatrix(predict2, mytesting$classe)
+RFCM
+```
+
+
+```{r}
+
+plot(modFit2, lwd = 3, main = "Prediction model random forest")
+
+
+```
+
+#### Compare models and choose with the best accuracy (random forest)
+
+```{r}
+result <- data.frame(RpartCM$overall, RFCM$overall)
+result
+```
+
+## Conclusion
+
+
+Random Forest was a good model for prediction of exercise quality compared to rpart. The RF model had over 99% accuracy and fitted well to other subsamples of the data. 
+
+In the first model D was the most difficult to predict. 
+
+
+#### Generating Files to submit as answers for the Assignment:
+
+We use Random Forests for our prediction:
+
+```{r}
+predictions <- predict(modFit2, validation, type = "class")
+predictionsFinal <- data.frame(validation$problem_id, predictions)
+print(predictionsFinal)
+
+```
+
+#### Function to generate files with predictions to submit for assignment
+
+```{r}
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+
+pml_write_files(predictions)
+
+```
