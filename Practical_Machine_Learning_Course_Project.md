@@ -144,13 +144,13 @@ model tested using the method rpart.
     plot(modFit1$finalModel, main = "Classification tree")
     text(modFit1$finalModel, use.n = TRUE, all = TRUE, cex = .7)
 
-![](Practical_Machine_Learning_Course_Project_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit1.png)
 
 \`\`\`
 
     fancyRpartPlot(modFit1$finalModel,cex=.8,under.cex=0.4)
 
-![](Practical_Machine_Learning_Course_Project_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit1_Final_model.png)
 
     predict1 <- predict(modFit1,mytesting)
     RpartCM <-confusionMatrix(mytesting$classe, predict1)
@@ -230,7 +230,7 @@ model tested using the method rpart.
 
     plot(modFit2, lwd = 3, main = "Prediction model random forest")
 
-![](Practical_Machine_Learning_Course_Project_files/figure-markdown_strict/unnamed-chunk-14-1.png)
+![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit2.png)
 
 #### Compare models and choose with the best accuracy (random forest)
 
