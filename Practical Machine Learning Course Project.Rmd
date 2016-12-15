@@ -126,7 +126,6 @@ print(modFit1$finalModel)
 
 plot(modFit1$finalModel, main = "Classification tree")
 text(modFit1$finalModel, use.n = TRUE, all = TRUE, cex = .5)
-![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit1.png)
 ```
 
 ```{r}
