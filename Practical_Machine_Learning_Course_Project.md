@@ -119,8 +119,7 @@ We can test 2 models: Decision Tree Model and Random forest
 
 #### 1. Decision Tree Model
 
-As the outcomes are categorical (nominal), a decision tree was the first
-model tested using the method rpart.
+First we use the method rpart.
 
     set.seed(1234)
     modFit1<-train(classe ~ .,method="rpart", data=mytraining)
