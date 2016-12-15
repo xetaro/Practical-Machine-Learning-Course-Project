@@ -144,11 +144,11 @@ model tested using the method rpart.
     plot(modFit1$finalModel, main = "Classification tree")
     text(modFit1$finalModel, use.n = TRUE, all = TRUE, cex = .5)
 
-![](Practical_Machine_Learning_Course_Project_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](https://github.com/xetaro/Practical-Machine-Learning-Course-Project/blob/master/plot_modFit1.png)
 
     fancyRpartPlot(modFit1$finalModel,cex=.8,under.cex=0.4)
 
-![](Practical_Machine_Learning_Course_Project_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![]()
 
     predict1 <- predict(modFit1,mytesting)
     RpartCM <-confusionMatrix(mytesting$classe, predict1)
